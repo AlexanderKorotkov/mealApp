@@ -1,24 +1,16 @@
 import React from 'react';
-import {StyleSheet, View, Text, Button, Platform} from 'react-native';
-import Colors from "../constants/Colors";
-import CATEGORIES from '../data/dummy-data'
+import MealList from "../components/MealList";
+import {CATEGORIES, MEALS} from '../data/dummy-data'
 const CategoryMealsScreen = (props) => {
 
   const catId = props.navigation.getParam('categoryId');
-  const selectedCategory = CATEGORIES.find(cat => cat.id === catId);
+  const displayedMeals = MEALS.filter(meal => meal.categoryIds.indexOf(catId) >= 0);
 
   return (
-    <View style={styles.screen}>
-      <Text>{selectedCategory.title}</Text>
-      <Button title='Go to Meal Detail' onPress={() => {
-        props.navigation.navigate({
-          routeName: 'MealDetail'
-        })
-      }} />
-      <Button title='Go Back' onPress={() => {
-        props.navigation.pop()
-      }} />
-    </View>
+    <MealList
+      listData={displayedMeals}
+      navigation={props.navigation}
+    />
   );
 };
 
@@ -27,19 +19,8 @@ CategoryMealsScreen.navigationOptions = (navigationData) => {
   const selectedCategory = CATEGORIES.find(cat => cat.id === catId);
   return {
     headerTitle: selectedCategory.title,
-    headerStyle: {
-      backgroundColor: Platform.OS === 'android' ? Colors.primaryColor : ''
-    },
-    headerTintColor: Platform.OS === 'android' ? 'white': Colors.primaryColor
   }
 };
 
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  }
-});
 
 export default CategoryMealsScreen;
